@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#16a34a"
+    >
+
+    <title>Euro → BD Calculator</title>
+
+    <link
+        rel="stylesheet"
+        href="second.css"
+    >
+
+</head>
+
+
+<body>
+
+<main class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="hero">
+
+        <div class="hero-icon">
+            💶
+        </div>
+
+        <div class="hero-text">
+
+            <h1>
+                Euro → BD
+            </h1>
+
+            <p>
+                কত Euro পাঠালে কত টাকা যাবে
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         BACK
+    ========================== -->
+
+    <a
+        href="index.html"
+        class="back-button"
+    >
+
+        <span>←</span>
+
+        আগের Calculator
+
+    </a>
+
+
+    <!-- =========================
+         EURO INPUT
+    ========================== -->
+
+    <section class="card">
+
+        <div class="section-title">
+
+            <span class="title-icon">
+                💶
+            </span>
+
+            <div>
+
+                <strong>
+                    Euro Amount
+                </strong>
+
+                <small>
+                    কত Euro পাঠাবে?
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <label for="euro">
+            Euro
+        </label>
+
+
+        <div class="input-wrapper">
+
+            <span class="currency">
+                €
+            </span>
+
+            <input
+                id="euro"
+                type="number"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="0"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         RATE INPUT
+    ========================== -->
+
+    <section class="card">
+
+        <div class="section-title">
+
+            <span class="title-icon">
+                💱
+            </span>
+
+            <div>
+
+                <strong>
+                    Exchange Rate
+                </strong>
+
+                <small>
+                    আজকের Rate দিন
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <label for="rate">
+            Rate
+        </label>
+
+
+        <div class="input-wrapper">
+
+            <span class="currency">
+                💸
+            </span>
+
+            <input
+                id="rate"
+                type="number"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="0"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CALCULATE
+    ========================== -->
+
+    <button
+        class="calculate-button"
+        onclick="calculateEuro()"
+    >
+
+        🧮
+
+        খরচ এবং বোনাস সহ
+
+    </button>
+
+
+    <!-- =========================
+         MAIN RESULT
+    ========================== -->
+
+    <section class="result-card main-result-card">
+
+        <div class="result-label">
+            🇧🇩 BD তে যাবে
+        </div>
+
+        <div
+            id="result"
+            class="main-result"
+        >
+            ৳ —
+        </div>
+
+        <div class="result-note">
+            খরচ বাদ দিয়ে হিসাব
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         DIVIDER
+    ========================== -->
+
+    <div class="divider">
+
+        <span>
+            অথবা
+        </span>
+
+    </div>
+
+
+    <!-- =========================
+         SEPARATE COST
+    ========================== -->
+
+    <section class="separate-section">
+
+        <div class="separate-icon">
+            🧾
+        </div>
+
+        <div class="separate-content">
+
+            <strong>
+                খরচ আলাদা
+            </strong>
+
+            <span>
+                5.90 / 7.80 Euro আলাদা দিতে হবে
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <button
+        class="separate-button"
+        onclick="calculateSeparateCost()"
+    >
+
+        💰
+
+        খরচ আলাদা হিসাব
+
+    </button>
+
+
+    <!-- =========================
+         SEPARATE RESULT
+    ========================== -->
+
+    <section class="result-card separate-result-card">
+
+        <div class="result-label">
+            💵 খরচ আলাদা হলে BD তে যাবে
+        </div>
+
+        <div
+            id="costResult"
+            class="cost-result"
+        >
+            ৳ —
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         INFO
+    ========================== -->
+
+    <div class="info-box">
+
+        <span>
+            💡
+        </span>
+
+        <p>
+            Rate পরিবর্তন করে যেকোনো সময় নতুন হিসাব করতে পারবেন।
+            Euro অথবা Rate ঘরে Enter চাপলেও Calculate হবে।
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <strong>
+            Euro → BD Calculator
+        </strong>
+
+        <span>
+            সহজ হিসাব • দ্রুত ফলাফল
+        </span>
+
+    </footer>
+
+
+</main>
+
+
+<script src="second.js"></script>
+
+</body>
+
+</html>
