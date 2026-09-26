@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#2563eb">
+
+  <title>Euro Transfer Calculator</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+  <main class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="hero">
+
+      <div class="hero-icon">
+        💶
+      </div>
+
+      <div>
+
+        <h1>
+          Euro Calculator
+        </h1>
+
+        <p>
+          Euro থেকে BD টাকার সহজ হিসাব
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- =========================
+         QUICK MENU
+    ========================== -->
+
+    <section class="menu-section">
+
+      <a href="second.html" class="menu-card euro-menu">
+
+        <div class="menu-icon">
+          💸
+        </div>
+
+        <div class="menu-text">
+
+          <strong>
+            Euro → BD হিসাব
+          </strong>
+
+          <span>
+            কত Euro পাঠালে কত টাকা যাবে
+          </span>
+
+        </div>
+
+        <div class="arrow">
+          ›
+        </div>
+
+      </a>
+
+
+      <a href="bkash.html" class="menu-card bkash-menu">
+
+        <div class="menu-icon">
+          💳
+        </div>
+
+        <div class="menu-text">
+
+          <strong>
+            bKash Calculator
+          </strong>
+
+          <span>
+            Euro ↔ BD টাকা হিসাব
+          </span>
+
+        </div>
+
+        <div class="arrow">
+          ›
+        </div>
+
+      </a>
+
+    </section>
+
+
+    <!-- =========================
+         CALCULATOR TITLE
+    ========================== -->
+
+    <div class="section-heading">
+
+      <span>
+        🧮
+      </span>
+
+      <div>
+
+        <strong>
+          Transfer Calculator
+        </strong>
+
+        <small>
+          Amount ও Rate দিয়ে হিসাব করুন
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SEND AMOUNT
+    ========================== -->
+
+    <section class="card">
+
+      <label for="amount">
+        💰 Send Amount
+      </label>
+
+      <div class="input-wrapper">
+
+        <span>
+          ৳
+        </span>
+
+        <input id="amount" type="number" inputmode="numeric" placeholder="0">
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RATE
+    ========================== -->
+
+    <section class="card">
+
+      <label for="rate">
+        💱 Exchange Rate
+      </label>
+
+      <div class="input-wrapper">
+
+        <span>
+          💸
+        </span>
+
+        <input id="rate" type="number" step="0.01" inputmode="decimal"
+          placeholder="0">
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         3 BUTTONS
+    ========================== -->
+
+    <section class="button-card">
+
+
+      <!-- BUTTON 1 -->
+
+      <button class="calculate-button" onclick="calculateWithBonus()">
+
+        <span>
+          🧮
+        </span>
+
+        খরচ,বোনাস সহ মিলিয়ে
+
+      </button>
+
+
+      <!-- BUTTON 2 -->
+
+      <button class="no-bonus-button" onclick="calculateWithoutBonus()">
+
+        <span>
+          ➖
+        </span>
+
+        খরচ ছাড়া. 5.90/7.80 খরচ আলাদা দিবে
+
+      </button>
+
+
+      <!-- BUTTON 3 -->
+
+      <button class="third-calculate-button" onclick="calculateThird()">
+
+        <span>
+
+        </span>
+
+        বোনাস ছাড়া
+
+      </button>
+
+
+    </section>
+
+
+    <!-- =========================
+         RESULT
+    ========================== -->
+
+    <section class="result-card">
+
+      <div class="result-top">
+
+        <span>
+          ✨ Result
+        </span>
+
+      </div>
+
+
+      <div id="result" class="main-result">
+        —
+      </div>
+
+
+      <div class="result-divider"></div>
+
+
+      <div class="bd-title">
+        🇧🇩 BD তে যাবে
+      </div>
+
+
+      <div id="bdResult" class="bd-result">
+        ৳ —
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         INFO
+    ========================== -->
+
+    <div class="info-box">
+
+      <span>
+        💡
+      </span>
+
+      <p>
+        ♠♣♦
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+      <strong>
+        Euro Transfer Calculator
+      </strong>
+
+      <span>
+        সহজ হিসাব • দ্রুত ফলাফল
+      </span>
+
+    </footer>
+
+
+  </main>
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
