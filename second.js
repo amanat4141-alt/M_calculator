@@ -1,328 +1,174 @@
-<!DOCTYPE html>
-<html lang="bn">
+/*
+    সাধারণ হিসাব
 
-<head>
+    Euro < 501 হলে
+    Bonus = 5.90
 
-    <meta charset="UTF-8">
+    Euro >= 501 হলে
+    Bonus = 7.80
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    তারপর:
 
-    <meta
-        name="theme-color"
-        content="#16a34a"
-    >
+    Euro - Bonus
+    × Rate
+    + 2.5%
+*/
 
-    <title>Euro → BD Calculator</title>
 
-    <link
-        rel="stylesheet"
-        href="second.css"
-    >
+function calculateEuro() {
 
-</head>
+  const euro = parseFloat(
+    document.getElementById("euro").value
+  );
 
+  const rate = parseFloat(
+    document.getElementById("rate").value
+  );
 
-<body>
+  const resultBox =
+    document.getElementById("result");
 
-<main class="container">
 
+  // Input check
 
-    <!-- =========================
-         HEADER
-    ========================== -->
+  if (
+    !euro ||
+    !rate ||
+    euro <= 0 ||
+    rate <= 0
+  ) {
 
-    <header class="hero">
+    resultBox.innerText = "৳ —";
 
-        <div class="hero-icon">
-            💶
-        </div>
+    return;
+  }
 
-        <div class="hero-text">
 
-            <h1>
-                Euro → BD
-            </h1>
+  /*
+      501 বা তার বেশি হলে
+      7.80 বাদ হবে
 
-            <p>
-                কত Euro পাঠালে কত টাকা যাবে
-            </p>
+      501 এর নিচে হলে
+      5.90 বাদ হবে
+  */
 
-        </div>
+  const bonus =
+    euro >= 501 ?
+    7.80 :
+    5.90;
 
-    </header>
 
+  // Euro থেকে Bonus বাদ
 
-    <!-- =========================
-         BACK
-    ========================== -->
+  const euroAfterBonus =
+    euro - bonus;
 
-    <a
-        href="index.html"
-        class="back-button"
-    >
 
-        <span>←</span>
+  // Rate দিয়ে গুণ
 
-        আগের Calculator
+  const bdBeforePercentage =
+    euroAfterBonus * rate;
 
-    </a>
 
+  // 2.5% যোগ
 
-    <!-- =========================
-         EURO INPUT
-    ========================== -->
+  const bdFinal =
+    bdBeforePercentage * 1.025;
 
-    <section class="card">
 
-        <div class="section-title">
+  // Result
 
-            <span class="title-icon">
-                💶
-            </span>
+  resultBox.innerText =
+    "৳ " + bdFinal.toFixed(2);
+}
 
-            <div>
 
-                <strong>
-                    Euro Amount
-                </strong>
+/*
+    খরচ আলাদা হিসাব
 
-                <small>
-                    কত Euro পাঠাবে?
-                </small>
+    এখানে কোনো 5.90 / 7.80
+    বাদ হবে না।
 
-            </div>
+    Euro × Rate
+    + 2.5%
+*/
 
-        </div>
 
+function calculateSeparateCost() {
 
-        <label for="euro">
-            Euro
-        </label>
+  const euro = parseFloat(
+    document.getElementById("euro").value
+  );
 
+  const rate = parseFloat(
+    document.getElementById("rate").value
+  );
 
-        <div class="input-wrapper">
+  const resultBox =
+    document.getElementById("costResult");
 
-            <span class="currency">
-                €
-            </span>
 
-            <input
-                id="euro"
-                type="number"
-                step="0.01"
-                inputmode="decimal"
-                placeholder="0"
-            >
+  // Input check
 
-        </div>
+  if (
+    !euro ||
+    !rate ||
+    euro <= 0 ||
+    rate <= 0
+  ) {
 
-    </section>
+    resultBox.innerText = "৳ —";
 
+    return;
+  }
 
-    <!-- =========================
-         RATE INPUT
-    ========================== -->
 
-    <section class="card">
+  // Euro × Rate
 
-        <div class="section-title">
+  const bdBeforePercentage =
+    euro * rate;
 
-            <span class="title-icon">
-                💱
-            </span>
 
-            <div>
+  // 2.5% যোগ
 
-                <strong>
-                    Exchange Rate
-                </strong>
+  const bdFinal =
+    bdBeforePercentage * 1.025;
 
-                <small>
-                    আজকের Rate দিন
-                </small>
 
-            </div>
+  // Result
 
-        </div>
+  resultBox.innerText =
+    "৳ " + bdFinal.toFixed(2);
+}
 
 
-        <label for="rate">
-            Rate
-        </label>
+/*
+    Enter চাপলে সাধারণ হিসাব হবে
+*/
 
+document
+  .getElementById("euro")
+  .addEventListener(
+    "keydown",
+    function(event) {
 
-        <div class="input-wrapper">
+      if (event.key === "Enter") {
+        calculateEuro();
+      }
 
-            <span class="currency">
-                💸
-            </span>
+    }
+  );
 
-            <input
-                id="rate"
-                type="number"
-                step="0.01"
-                inputmode="decimal"
-                placeholder="0"
-            >
 
-        </div>
+document
+  .getElementById("rate")
+  .addEventListener(
+    "keydown",
+    function(event) {
 
-    </section>
+      if (event.key === "Enter") {
+        calculateEuro();
+      }
 
-
-    <!-- =========================
-         CALCULATE
-    ========================== -->
-
-    <button
-        class="calculate-button"
-        onclick="calculateEuro()"
-    >
-
-        🧮
-
-        খরচ এবং বোনাস সহ
-
-    </button>
-
-
-    <!-- =========================
-         MAIN RESULT
-    ========================== -->
-
-    <section class="result-card main-result-card">
-
-        <div class="result-label">
-            🇧🇩 BD তে যাবে
-        </div>
-
-        <div
-            id="result"
-            class="main-result"
-        >
-            ৳ —
-        </div>
-
-        <div class="result-note">
-            খরচ বাদ দিয়ে হিসাব
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         DIVIDER
-    ========================== -->
-
-    <div class="divider">
-
-        <span>
-            অথবা
-        </span>
-
-    </div>
-
-
-    <!-- =========================
-         SEPARATE COST
-    ========================== -->
-
-    <section class="separate-section">
-
-        <div class="separate-icon">
-            🧾
-        </div>
-
-        <div class="separate-content">
-
-            <strong>
-                খরচ আলাদা
-            </strong>
-
-            <span>
-                5.90 / 7.80 Euro আলাদা দিতে হবে
-            </span>
-
-        </div>
-
-    </section>
-
-
-    <button
-        class="separate-button"
-        onclick="calculateSeparateCost()"
-    >
-
-        💰
-
-        খরচ আলাদা হিসাব
-
-    </button>
-
-
-    <!-- =========================
-         SEPARATE RESULT
-    ========================== -->
-
-    <section class="result-card separate-result-card">
-
-        <div class="result-label">
-            💵 খরচ আলাদা হলে BD তে যাবে
-        </div>
-
-        <div
-            id="costResult"
-            class="cost-result"
-        >
-            ৳ —
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         INFO
-    ========================== -->
-
-    <div class="info-box">
-
-        <span>
-            💡
-        </span>
-
-        <p>
-            Rate পরিবর্তন করে যেকোনো সময় নতুন হিসাব করতে পারবেন।
-            Euro অথবা Rate ঘরে Enter চাপলেও Calculate হবে।
-        </p>
-
-    </div>
-
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-    <footer>
-
-        <strong>
-            Euro → BD Calculator
-        </strong>
-
-        <span>
-            সহজ হিসাব • দ্রুত ফলাফল
-        </span>
-
-    </footer>
-
-
-</main>
-
-
-<script src="second.js"></script>
-
-</body>
-
-</html>
+    }
+  );
