@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#10b981">
+<title>Admin Panel</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+</head>
+<body class="theme-green">
+
+<nav class="app-nav">
+  <div class="app-nav-inner">
+    <a href="admin.html" class="app-nav-brand">
+      <div class="app-nav-brand-icon" style="background:linear-gradient(135deg,#1e293b 0%,#0b1220 100%);">
+        <i class="bi bi-sliders"></i>
+      </div>
+      <div class="app-nav-brand-text">
+        <strong>Admin Panel</strong>
+        <span>User Management</span>
+      </div>
+    </a>
+
+    <div class="nav-right">
+      <div class="dropdown">
+        <button class="user-btn-compact" data-bs-toggle="dropdown" aria-expanded="false">
+          <div class="user-avatar" id="userAvatar">A</div>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li class="dropdown-header">
+            <div class="dh-label">Signed in as</div>
+            <div class="dh-name">
+              <span id="ddUserName">Admin</span>
+              <span class="dh-badge">Admin</span>
+            </div>
+          </li>
+          <li><a class="dropdown-item" href="admin.html"><i class="bi bi-sliders"></i> Admin Panel</a></li>
+          <li><a class="dropdown-item" href="settings.html"><i class="bi bi-key"></i> Account</a></li>
+          <li><a class="dropdown-item danger" href="#" onclick="logout(); return false;"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="app-main">
+  <div class="container-app">
+
+    <div class="nav-btn-box">
+      <a href="second.html" class="nav-btn btn-green"><i class="bi bi-currency-euro"></i><span>Euro-BD</span></a>
+      <a href="index.html" class="nav-btn btn-blue"><i class="bi bi-calculator"></i><span>Euro Calc</span></a>
+      <a href="bkash.html" class="nav-btn btn-pink"><i class="bi bi-phone"></i><span>bKash</span></a>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-title">
+        <div class="app-card-icon"><i class="bi bi-shield-lock-fill"></i></div>
+        <div><strong>নিজের Account</strong><small>Admin username ও password</small></div>
+      </div>
+      <a href="settings.html" class="app-btn dark" style="text-decoration:none; margin-top:0;">
+        <i class="bi bi-person-gear"></i>
+        <span>Admin Account বদলান</span>
+      </a>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-title">
+        <div class="app-card-icon"><i class="bi bi-person-plus"></i></div>
+        <div><strong>নতুন User</strong><small>Registration করুন</small></div>
+      </div>
+
+      <label class="app-label" for="newUsername">Username</label>
+      <div class="app-input">
+        <i class="bi bi-person" style="font-size:16px;color:var(--ink-4);"></i>
+        <input id="newUsername" type="text" placeholder="username" autocapitalize="off" spellcheck="false">
+      </div>
+
+      <label class="app-label" for="newPassword" style="margin-top:14px;">Password</label>
+      <div class="app-input">
+        <i class="bi bi-lock" style="font-size:16px;color:var(--ink-4);"></i>
+        <input id="newPassword" type="text" placeholder="password" autocapitalize="off" spellcheck="false">
+      </div>
+
+      <div id="addMsg" class="login-err"></div>
+
+      <button class="app-btn primary" onclick="handleAddUser()"
+        style="background:linear-gradient(135deg,#1e293b 0%,#0b1220 100%);box-shadow:0 8px 20px rgba(11,18,32,.22);">
+        <i class="bi bi-check-circle"></i>
+        <span>User যোগ করুন</span>
+      </button>
+    </div>
+
+    <div class="app-card">
+      <div class="app-card-title">
+        <div class="app-card-icon slate"><i class="bi bi-people"></i></div>
+        <div><strong>Users</strong><small id="userCount">মোট: 0</small></div>
+      </div>
+      <div id="usersList" class="split-result-area">
+        <div class="split-placeholder">কোনো User নেই</div>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      <strong>Admin Panel</strong>
+      <span>Restricted Access</span>
+    </footer>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+  checkAdmin();
+
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    document.getElementById("userAvatar").textContent = currentUser.username.charAt(0).toUpperCase();
+    document.getElementById("ddUserName").textContent = currentUser.username;
+  }
+
+  const newUsername = document.getElementById("newUsername");
+  const newPassword = document.getElementById("newPassword");
+  const addMsg = document.getElementById("addMsg");
+  const usersList = document.getElementById("usersList");
+  const userCount = document.getElementById("userCount");
+
+  function renderUsers() {
+    const users = getUsers();
+    userCount.textContent = "মোট: " + users.length;
+
+    if (users.length === 0) {
+      usersList.innerHTML = `<div class="split-placeholder">কোনো User নেই</div>`;
+      return;
+    }
+
+    let html = "";
+    users.forEach(function (user, index) {
+      const date = new Date(user.createdAt);
+      const dateText = date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+
+      html += `
+        <div class="split-row" style="flex-wrap:wrap;">
+          <div class="split-number">${index + 1}</div>
+          <div class="split-data">
+            <div class="split-tk"><i class="bi bi-person"></i> ${escapeHtml(user.username)}</div>
+            <div class="split-euro"><i class="bi bi-lock"></i> ${escapeHtml(user.password)}</div>
+            <div class="split-euro" style="font-size:11px;margin-top:2px;">যোগ: ${dateText}</div>
+          </div>
+          <button class="edit-btn" data-user="${escapeHtml(user.username)}" title="Edit"><i class="bi bi-pencil"></i></button>
+          <button class="delete-btn" data-user="${escapeHtml(user.username)}" title="Delete"><i class="bi bi-trash"></i></button>
+        </div>
+
+        <div class="pwd-edit-area" data-area="${escapeHtml(user.username)}" style="display:none; margin-bottom:10px;">
+          <div style="font-size:11px; font-weight:700; color:var(--ink-4); text-transform:uppercase; letter-spacing:1.4px; margin-bottom:8px;">Edit — ${escapeHtml(user.username)}</div>
+
+          <label class="app-label">নতুন Username</label>
+          <div class="app-input" style="margin-bottom:10px;">
+            <i class="bi bi-person" style="font-size:16px;color:var(--ink-4);"></i>
+            <input class="edit-user-input" data-user="${escapeHtml(user.username)}" type="text" placeholder="নতুন username" autocapitalize="off" spellcheck="false">
+          </div>
+
+          <label class="app-label">নতুন Password</label>
+          <div class="app-input" style="margin-bottom:10px;">
+            <i class="bi bi-key" style="font-size:16px;color:var(--ink-4);"></i>
+            <input class="edit-pwd-input" data-user="${escapeHtml(user.username)}" type="text" placeholder="নতুন password" autocapitalize="off" spellcheck="false">
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="app-btn primary save-edit-btn" data-user="${escapeHtml(user.username)}" style="margin-top:0; padding:12px; font-size:13.5px;">
+              <i class="bi bi-check"></i><span>Save</span>
+            </button>
+            <button class="app-btn dark cancel-edit-btn" data-user="${escapeHtml(user.username)}" style="margin-top:0; padding:12px; font-size:13.5px;">
+              <i class="bi bi-x"></i><span>Cancel</span>
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    usersList.innerHTML = html;
+
+    usersList.querySelectorAll(".delete-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const username = this.dataset.user;
+        if (confirm("Delete '" + username + "'?")) {
+          deleteUser(username);
+          renderUsers();
+        }
+      });
+    });
+
+    usersList.querySelectorAll(".edit-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const username = this.dataset.user;
+        const area = usersList.querySelector('.pwd-edit-area[data-area="' + CSS.escape(username) + '"]');
+        if (!area) return;
+
+        const isHidden = area.style.display === "none" || !area.style.display;
+        usersList.querySelectorAll(".pwd-edit-area").forEach(a => a.style.display = "none");
+
+        if (isHidden) {
+          area.style.display = "block";
+          area.querySelector(".edit-user-input").value = "";
+          area.querySelector(".edit-pwd-input").value = "";
+          area.querySelector(".edit-user-input").focus();
+        }
+      });
+    });
+
+    usersList.querySelectorAll(".save-edit-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const username = this.dataset.user;
+        const area = usersList.querySelector('.pwd-edit-area[data-area="' + CSS.escape(username) + '"]');
+        const newUserVal = area.querySelector(".edit-user-input").value.trim();
+        const newPwdVal = area.querySelector(".edit-pwd-input").value.trim();
+
+        const result = changeUserCredentials(username, newUserVal, newPwdVal);
+
+        if (result.ok) {
+          alert("✅ '" + username + "' এর তথ্য পরিবর্তন হয়েছে");
+          renderUsers();
+        } else {
+          alert("❌ " + result.error);
+        }
+      });
+    });
+
+    usersList.querySelectorAll(".cancel-edit-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const username = this.dataset.user;
+        const area = usersList.querySelector('.pwd-edit-area[data-area="' + CSS.escape(username) + '"]');
+        area.style.display = "none";
+      });
+    });
+
+    usersList.querySelectorAll(".edit-user-input, .edit-pwd-input").forEach(function (input) {
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const username = this.dataset.user;
+          const area = usersList.querySelector('.pwd-edit-area[data-area="' + CSS.escape(username) + '"]');
+          area.querySelector(".save-edit-btn").click();
+        }
+      });
+    });
+  }
+
+  function handleAddUser() {
+    const r = addUser(newUsername.value.trim(), newPassword.value.trim());
+    if (r.ok) {
+      showMsg("✅ User সফলভাবে যোগ হয়েছে", "success");
+      newUsername.value = "";
+      newPassword.value = "";
+      renderUsers();
+    } else {
+      showMsg("❌ " + r.error, "error");
+    }
+  }
+
+  function showMsg(text, type) {
+    addMsg.textContent = text;
+    addMsg.classList.add("show");
+
+    if (type === "success") {
+      addMsg.style.background = "#ecfdf5";
+      addMsg.style.color = "#047857";
+      addMsg.style.borderColor = "#a7f3d0";
+    } else {
+      addMsg.style.background = "#fff1f2";
+      addMsg.style.color = "#991b1b";
+      addMsg.style.borderColor = "#fecaca";
+    }
+
+    setTimeout(() => addMsg.classList.remove("show"), 3000);
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  [newUsername, newPassword].forEach(function (input) {
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); handleAddUser(); }
+    });
+  });
+
+  renderUsers();
+</script>
+
+</body>
+</html>
