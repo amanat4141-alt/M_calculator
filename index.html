@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#3b82f6">
+  <title>Euro Calculator</title>
+  <script>
+    (function() {
+      const AUTH_KEY = "euroCalcAuth";
+      const AUTH_EXPIRY_DAYS = 7;
+      const data = localStorage.getItem(AUTH_KEY);
+      let authed = false;
+      if (data) {
+        try {
+          const t = JSON.parse(data).time;
+          authed = (Date.now() - t) / (1000 * 60 * 60 * 24) <
+            AUTH_EXPIRY_DAYS;
+        } catch {}
+      }
+      if (!authed) window.location.replace("login.html");
+    })();
+  </script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="theme-blue">
+
+  <nav class="app-nav">
+    <div class="app-nav-inner">
+
+      <a href="index.html" class="app-nav-brand">
+        <div class="app-nav-brand-icon">
+          <i class="bi bi-currency-euro"></i>
+        </div>
+        <div class="app-nav-brand-text">
+          <strong>Euro Calculator</strong>
+          <span>সহজ হিসাব • দ্রুত ফলাফল</span>
+        </div>
+      </a>
+
+      <div class="nav-right">
+        <div class="dropdown">
+          <button class="user-btn-compact" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <div class="user-avatar" id="userAvatar">U</div>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="dropdown-header">
+              <div class="dh-label">Signed in as</div>
+              <div class="dh-name">
+                <span id="ddUserName">User</span>
+                <span class="dh-badge" id="ddRole">User</span>
+              </div>
+            </li>
+            <li>
+              <a class="dropdown-item" href="admin.html" id="adminLink"
+                style="display:none;">
+                <i class="bi bi-sliders"></i> Admin Panel
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="settings.html">
+                <i class="bi bi-key"></i> Account
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item danger" href="#"
+                onclick="logout(); return false;">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="app-main">
+    <div class="container-app">
+
+      <!-- 3 NAV BUTTONS -->
+      <div class="nav-btn-box">
+        <a href="second.html" class="nav-btn btn-green">
+          <i class="bi bi-currency-euro"></i>
+          <span>Euro-BD</span>
+        </a>
+        <a href="index.html" class="nav-btn btn-blue active">
+          <i class="bi bi-calculator"></i>
+          <span>Euro Calc</span>
+        </a>
+        <a href="bkash.html" class="nav-btn btn-pink">
+          <i class="bi bi-phone"></i>
+          <span>bKash</span>
+        </a>
+      </div>
+
+
+      <!-- EXCHANGE RATE -->
+      <div class="rate-card">
+        <div class="rate-card-header">
+          <div class="rate-card-icon"><i class="bi bi-arrow-left-right"></i>
+          </div>
+          <div>
+            <strong>Exchange Rate</strong>
+            <small>আজকের Rate দিন</small>
+          </div>
+        </div>
+        <label class="rate-label" for="rate">Rate</label>
+        <div class="rate-input-wrap">
+          <span>💸</span>
+          <input id="rate" type="text" inputmode="decimal" placeholder="0">
+        </div>
+      </div>
+
+
+      <!-- AMOUNT -->
+      <div class="app-card">
+        <div class="app-card-title">
+          <div class="app-card-icon blue"><i class="bi bi-cash-coin"></i>
+          </div>
+          <div>
+            <strong>Send Amount</strong>
+            <small>কত টাকা পাঠাবে?</small>
+          </div>
+        </div>
+        <label class="app-label" for="amount">Amount (৳)</label>
+        <div class="app-input">
+          <span class="sym-tk">৳</span>
+          <input id="amount" type="text" inputmode="decimal" placeholder="0">
+        </div>
+      </div>
+
+
+      <!-- BUTTONS -->
+      <div class="btn-group-app">
+        <button class="app-btn primary" onclick="calculate()">
+          <i class="bi bi-cash-coin"></i>
+          <span>খরচ, বোনাস সহ মিলিয়ে</span>
+        </button>
+        <button class="app-btn dark" onclick="calculateWithoutBonus()">
+          <i class="bi bi-receipt"></i>
+          <span>খরচ ছাড়া • 5.90/7.80 আলাদা</span>
+        </button>
+        <button class="app-btn amber" onclick="calculateBonusOnly()">
+          <i class="bi bi-gift"></i>
+          <span>বোনাস ছাড়া</span>
+        </button>
+      </div>
+
+
+      <!-- RESULT -->
+      <div class="result-box">
+        <div class="result-label">💶 Euro Result</div>
+        <div id="result" class="main-result">—</div>
+        <div class="result-divider"></div>
+        <div id="bdResult" class="bd-result">৳ —</div>
+        <div id="infoText" class="result-note">Amount এবং Rate দিন</div>
+      </div>
+
+
+      <!-- SPLIT -->
+      <div class="app-card">
+        <div class="app-card-title">
+          <div class="app-card-icon amber"><i class="bi bi-scissors"></i></div>
+          <div>
+            <strong>Split হিসাব</strong>
+            <small>TK Amount ভাগ করে হিসাব করুন</small>
+          </div>
+        </div>
+        <label class="app-label" for="splitAmount">Split TK Amount</label>
+        <div class="app-input">
+          <span class="sym-tk">৳</span>
+          <input id="splitAmount" type="text" inputmode="decimal"
+            placeholder="0">
+        </div>
+        <div class="split-rate-row">
+          <span>Rate</span>
+          <strong id="splitRateDisplay">—</strong>
+        </div>
+        <button class="app-btn primary" onclick="calculateSplit()">
+          <i class="bi bi-scissors"></i>
+          <span>Split হিসাব করুন</span>
+        </button>
+        <div id="splitResult" class="split-result-area">
+          <div class="split-placeholder">Split Amount দিন</div>
+        </div>
+      </div>
+
+
+      <footer class="app-footer">
+        <strong>Euro Calculator</strong>
+        <span>Simple • Fast • Reliable</span>
+      </footer>
+
+    </div>
+  </main>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const user = getCurrentUser();
+    if (user) {
+      document.getElementById("userAvatar").textContent = user.username.charAt(
+        0).toUpperCase();
+      document.getElementById("ddUserName").textContent = user.username;
+      if (user.isAdmin) {
+        document.getElementById("ddRole").textContent = "Admin";
+        document.getElementById("adminLink").style.display = "flex";
+      }
+    }
+  </script>
+
+</body>
+
+</html>
